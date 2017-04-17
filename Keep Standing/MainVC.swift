@@ -9,18 +9,8 @@
 import Foundation
 import UIKit
 import UICircularProgressRing
+import HealthKit
 
-
-enum FormType: Double {
-    case standing = 2.0
-    case sitting = 1.2
-}
-
-enum StateType {
-    case none
-    case trackingStanding
-    case trackingSitting
-}
 
 class MainVC: UIViewController {
     static var secondInHour = Double(5)  // Change to 60 * 60
@@ -50,10 +40,19 @@ class MainVC: UIViewController {
             self.sittingTimeLabel.text = String(format: "%0.1f", self.currentSittingTime)
         }
     }
+ 
+    /// MARK: - Health Manager
+    let healthManager = HealthManager.getInstance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initViews()
+        
+        
+        self.healthManager.getWeight(completion: { sample, error in
+            print(error)
+        })
+    
     }
     
     
