@@ -62,17 +62,11 @@ class MainVC: UIViewController {
     
     // MARK: - Helper Methods
     func initViews() {
-        self.makeRoundedButtons()
         self.initProgressBar()
     }
     
     func initProgressBar() {
         self.progressBar.value = 0.0
-    }
-
-    func makeRoundedButtons() {
-        self.sitButton.layer.cornerRadius = 5
-        self.standButton.layer.cornerRadius = 5
     }
     
     func updateStandingTime() {

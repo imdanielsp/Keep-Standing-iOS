@@ -20,10 +20,25 @@ class IntroVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.weightPicker.dataSource = weightPickerManager
-        self.weightPicker.delegate = weightPickerManager
-    
+        self.setupPickers()
     }
 
+    func setupPickers() {
+        self.weightPicker.dataSource = weightPickerManager
+        self.weightPicker.delegate = weightPickerManager
+        
+        self.weightPicker.selectRow(100, inComponent: 0, animated: true)
+
+    }
+    
+    @IBAction func startButtonPressed() {
+        if self.userDataManager.isWeightSet {
+            performSegue(withIdentifier: "toMainVC", sender: nil)
+        } else {
+            let alertController = UIAlertController(title: "Please selet your weight", message: nil, preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(action)
+            present(alertController, animated: true)
+        }
+    }
 }

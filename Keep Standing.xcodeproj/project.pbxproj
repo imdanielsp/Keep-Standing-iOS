@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E1B3A0E1EA6BEF70089E1BF /* RoundedButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1B3A0D1EA6BEF70089E1BF /* RoundedButtonView.swift */; };
 		6E365D791EA6940D0076D798 /* IntroVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E365D781EA6940D0076D798 /* IntroVC.swift */; };
 		6E365D7B1EA694EF0076D798 /* WeightPickerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E365D7A1EA694EF0076D798 /* WeightPickerManager.swift */; };
 		6E54F69A1EA5B0E300CA6F33 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E54F6991EA5B0E300CA6F33 /* UserManager.swift */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E1B3A0D1EA6BEF70089E1BF /* RoundedButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButtonView.swift; sourceTree = "<group>"; };
 		6E365D781EA6940D0076D798 /* IntroVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroVC.swift; sourceTree = "<group>"; };
 		6E365D7A1EA694EF0076D798 /* WeightPickerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeightPickerManager.swift; sourceTree = "<group>"; };
 		6E54F6991EA5B0E300CA6F33 /* UserManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 		6E999A6C1E9C7DEC00A0F3D1 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6E1B3A0D1EA6BEF70089E1BF /* RoundedButtonView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				6E365D791EA6940D0076D798 /* IntroVC.swift in Sources */,
 				6E54F69A1EA5B0E300CA6F33 /* UserManager.swift in Sources */,
 				6EF9F4F11E98AB5000592572 /* AppDelegate.swift in Sources */,
+				6E1B3A0E1EA6BEF70089E1BF /* RoundedButtonView.swift in Sources */,
 				6E365D7B1EA694EF0076D798 /* WeightPickerManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

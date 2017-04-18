@@ -15,10 +15,16 @@ class WeightPickerManager: NSObject, UIPickerViewDataSource, UIPickerViewDelegat
     
     lazy private var data: [[String]] = [self.weights, self.units]
     
-    let userDataManager: UserDataManager
+    private let userDataManager: UserDataManager
+    private weak var picker: UIPickerView?
     
-    init(manager: UserDataManager) {
+    init(manager: UserDataManager, picker: UIPickerView? = nil) {
         self.userDataManager = manager
+        self.picker = picker
+        
+        if let picker = self.picker {
+            picker.selectRow(self.weights.count/2, inComponent: 0, animated: false)
+        }
     }
     
     // MARK: - UIPickerViewDataSource Protocol
@@ -31,13 +37,16 @@ class WeightPickerManager: NSObject, UIPickerViewDataSource, UIPickerViewDelegat
     }
     
     // MARK: - UIPickerViewDelegate Protocol
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.data[component][row]
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        let data = self.data[component][row]
+        let attrString = NSAttributedString(string: data,
+                                            attributes: [
+                                                NSForegroundColorAttributeName: UIColor.lightGray])
+        return attrString
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-                
         self.userDataManager.weight = Double(self.weights[row])
     }
-    
+
 }
