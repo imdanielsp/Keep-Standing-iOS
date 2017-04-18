@@ -9,6 +9,8 @@
 import Foundation
 
 enum FormType: Double {
+    // This are METS values, check this Harvard's Measuring Physical Activity table for more
+    // https://www.hsph.harvard.edu/nutritionsource/mets-activity-table/
     case standing = 2.0
     case sitting = 1.2
 }

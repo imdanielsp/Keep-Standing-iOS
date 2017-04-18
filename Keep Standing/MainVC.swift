@@ -13,7 +13,7 @@ import HealthKit
 
 
 class MainVC: UIViewController {
-    static var secondInHour = Double(5)  // Change to 60 * 60
+    static var secondInHour = Double(5) // Change to 60 * 60
     
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var burnedCaloriesLabel: UILabel!
@@ -25,6 +25,9 @@ class MainVC: UIViewController {
     
     // State
     var tracking: StateType = .none
+    
+    // User
+    var user = User()
     
     // Timer and current data
     var timer: Timer = Timer()
@@ -41,18 +44,18 @@ class MainVC: UIViewController {
         }
     }
  
-    /// MARK: - Health Manager
+    // MARK: - Health Manager
     let healthManager = HealthManager.getInstance()
     
+    
+    // MARK: - UserData Manager
+    let userDataManager = UserDataManager()
+    
+    // MARK: ViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initViews()
-        
-        
-        self.healthManager.getWeight(completion: { sample, error in
-            print(error)
-        })
-    
+        self.configUserData()
     }
     
     
@@ -87,16 +90,110 @@ class MainVC: UIViewController {
         }
     }
     
-    func updateBurnedCaloriesIn(form: FormType) {
-        // TODO: - Need to get user's weight instead of hardcoded 160
+    func updateBurnedCaloriesIn(form: FormType) throws {
+        guard let userWeight = self.user.weight else {
+            throw DataError.userDataNotAvailable
+        }
+        
         switch form {
         case .sitting:
-            self.currentBurnedCalories += 160 * (1.0/MainVC.secondInHour) * form.rawValue
+            self.currentBurnedCalories += userWeight * (1.0/MainVC.secondInHour) * form.rawValue
         case .standing:
-            self.currentBurnedCalories += 160 * (1.0/MainVC.secondInHour) * form.rawValue
+            self.currentBurnedCalories += userWeight * (1.0/MainVC.secondInHour) * form.rawValue
         }
         
         self.burnedCaloriesLabel.text = String(format: "%0.0f", self.currentBurnedCalories)
+    }
+    
+    func displayValueGetterModal(title: String?, message: String?, actionTitle: String? = "OK",
+                                   textFieldPlaceholder: String?,
+                                   completion: @escaping (Double) -> Void) {
+        
+        // Builds a UIAlerController that gets data from the user
+        let alertController = UIAlertController(title: title,
+                                                message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: actionTitle, style: .default) { [weak alertController] _ in
+            if let alertController = alertController,
+                let textFields = alertController.textFields, let text = textFields[0].text,
+                let height = Double(text) {
+                // Calls completion
+                completion(height)
+            }
+            
+        }
+        alertController.addTextField { textField in
+            textField.placeholder = textFieldPlaceholder
+        }
+        alertController.addAction(action)
+        present(alertController, animated: true)
+    }
+    
+    // TODO: - Consider for refactoring because getting height and weight are similar operation
+    func configUserData() {
+        // Try to load data from UserDataManager, otherwise, try to find it in Health,
+        // if none are available get input from user
+        
+        // User data not set, get it
+        // Height
+        if !self.userDataManager.isHeightSet {
+            // Get height form Health Kit
+            self.healthManager.getHeight { [weak self] result, error in
+                if let error = error {
+                    // Error getting data from HealthKit,
+                    // TODO: - Display error
+                    print("\(error.localizedDescription)")
+                    return
+                }
+                
+                if let result = result {
+                    // Got data from HealthKit, good
+                    let height = (result as? HKQuantitySample)?.quantity.doubleValue(for: HKUnit.meter())
+                    self?.user.height = height
+                    self?.userDataManager.height = height
+                } else {
+                    // Data is not set in HealthKit, get it from user
+                    self?.displayValueGetterModal(title: "Provide your height", message: "We need your height to calculate the burned calories", textFieldPlaceholder: "Enter height in meters") { [weak self] height in
+                        self?.user.height = height
+                        self?.userDataManager.height = height
+                    }
+                }
+            }
+        } else {
+            // Data is avialable from UserDataManager
+            self.user.height = self.userDataManager.height!
+        }
+        
+        // Weight
+        if !self.userDataManager.isWeightSet {
+            // Get height form Health Kit
+            self.healthManager.getWeight { [weak self] result, error in
+                if let error = error {
+                    // Error getting data from HealthKit,
+                    // TODO: - Display error
+                    print("\(error.localizedDescription)")
+                    return
+                }
+                
+                if let result = result {
+                    // Got data from HealthKit, good
+                    let weight = (result as? HKQuantitySample)?.quantity.doubleValue(for: HKUnit.pound())
+                    self?.user.weight = weight
+                    self?.userDataManager.weight = weight
+                } else {
+                    // Data is not set in HealthKit, get it from user
+                    self?.displayValueGetterModal(title: "Provide your weight",
+                                                 message: "We need your weight to calculate the burned calories",
+                                                 textFieldPlaceholder: "Enter weight in lbs") { [weak self] weight in
+                        self?.user.weight = weight
+                        self?.userDataManager.weight = weight
+                    }
+                }
+            }
+        } else {
+            // Data is avialable from UserDataManager
+            self.user.weight = self.userDataManager.weight!
+        }
+        
     }
     
     // MARK: - Button Actions
@@ -120,7 +217,21 @@ class MainVC: UIViewController {
                 
                 // Update label
                 self?.updateSittingTime()
-                self?.updateBurnedCaloriesIn(form: .sitting)
+                
+                do {
+                    try self?.updateBurnedCaloriesIn(form: .sitting)
+                } catch DataError.userDataNotAvailable {
+                    self?.configUserData()
+                    do {
+                        try self?.updateBurnedCaloriesIn(form: .sitting)
+                    } catch {
+                        // TODO: - Display Error
+                    }
+                } catch {
+                    // TODO: - Make sure to save current data before quit
+                    print("Unkown error in sitButtonPressed")
+                    fatalError()
+                }
                 
                 if progress >= 100.0 { // Done, stop the timer
                     self?.progressBar.setProgress(value: 0.0, animationDuration: 1.0)
@@ -160,7 +271,21 @@ class MainVC: UIViewController {
                 
                 // Update label
                 self?.updateStandingTime()
-                self?.updateBurnedCaloriesIn(form: .standing)
+                
+                do {
+                    try self?.updateBurnedCaloriesIn(form: .standing)
+                } catch DataError.userDataNotAvailable {
+                    self?.configUserData()
+                    do {
+                        try self?.updateBurnedCaloriesIn(form: .standing)
+                    } catch {
+                        // TODO: - Display Error
+                    }
+                } catch {
+                    // TODO: - Make sure to save current data before quit
+                    print("Unkown error in standButtonPressed")
+                    fatalError()
+                }
                 
                 if progress >= 100.0 { // Done, stop the timer
                     self?.progressBar.setProgress(value: 0.0, animationDuration: 1.0)

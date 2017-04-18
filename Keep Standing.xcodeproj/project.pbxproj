@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E54F69A1EA5B0E300CA6F33 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E54F6991EA5B0E300CA6F33 /* UserManager.swift */; };
+		6E54F69C1EA5B9AB00CA6F33 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E54F69B1EA5B9AB00CA6F33 /* User.swift */; };
+		6E54F69E1EA5C25C00CA6F33 /* DataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E54F69D1EA5C25C00CA6F33 /* DataError.swift */; };
 		6EF33AD11EA4847000A82780 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF33AD01EA4847000A82780 /* HealthManager.swift */; };
 		6EF33AD31EA4848500A82780 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF33AD21EA4848500A82780 /* HealthKit.framework */; };
 		6EF33AD61EA486EB00A82780 /* WatchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF33AD51EA486EB00A82780 /* WatchKit.framework */; };
@@ -20,6 +23,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E54F6991EA5B0E300CA6F33 /* UserManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		6E54F69B1EA5B9AB00CA6F33 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		6E54F69D1EA5C25C00CA6F33 /* DataError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataError.swift; sourceTree = "<group>"; };
 		6EF33AD01EA4847000A82780 /* HealthManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
 		6EF33AD21EA4848500A82780 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		6EF33AD41EA4848500A82780 /* Keep Standing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Keep Standing.entitlements"; sourceTree = "<group>"; };
@@ -78,6 +84,7 @@
 		6E999A6E1E9C7DF500A0F3D1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6E54F69B1EA5B9AB00CA6F33 /* User.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -87,6 +94,8 @@
 			children = (
 				6EF33AD01EA4847000A82780 /* HealthManager.swift */,
 				6EF33AD71EA487B700A82780 /* Type.swift */,
+				6E54F6991EA5B0E300CA6F33 /* UserManager.swift */,
+				6E54F69D1EA5C25C00CA6F33 /* DataError.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -268,7 +277,10 @@
 			files = (
 				6EF33AD11EA4847000A82780 /* HealthManager.swift in Sources */,
 				6EF33AD81EA487B700A82780 /* Type.swift in Sources */,
+				6E54F69C1EA5B9AB00CA6F33 /* User.swift in Sources */,
 				6EF9F4F31E98AB5000592572 /* MainVC.swift in Sources */,
+				6E54F69E1EA5C25C00CA6F33 /* DataError.swift in Sources */,
+				6E54F69A1EA5B0E300CA6F33 /* UserManager.swift in Sources */,
 				6EF9F4F11E98AB5000592572 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
