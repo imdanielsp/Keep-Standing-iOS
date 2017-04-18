@@ -39,5 +39,7 @@
 	<string>Allow Keep Standing to write to your Health Kit.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Allow Keep Standing read your height and weight to calcutale the burned calories.</string>
+	<key>View controller-based status bar appearance equal</key>
+	<string>NO</string>
 </dict>
 </plist>

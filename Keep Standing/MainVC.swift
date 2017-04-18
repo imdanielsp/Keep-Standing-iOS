@@ -56,6 +56,7 @@ class MainVC: UIViewController {
         super.viewDidLoad()
         self.initViews()
         self.configUserData()
+
     }
     
     
