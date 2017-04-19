@@ -52,8 +52,7 @@ class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initViews()
-    }
-    
+    }   
     
     // MARK: - Helper Methods
     func initViews() {
@@ -90,6 +89,22 @@ class MainVC: UIViewController {
             }
             
             self.burnedCaloriesLabel.text = String(format: "%0.0f", self.currentBurnedCalories)
+            
+            self.userDataManager.save(calories: self.currentBurnedCalories) { [weak self] calories, date in
+                self?.healthManager.report(calories: calories, date: Date()) { [weak self] success, error in
+                    if error != nil {
+                        let message = "Couldn't save data to Health Kit"
+                        let alertController = UIAlertController(title: "Error", message: message,
+                                                               preferredStyle: .alert)
+                        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                        alertController.addAction(action)
+                        
+                        DispatchQueue.main.async {
+                            self?.present(alertController, animated: true)
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -187,7 +202,7 @@ class MainVC: UIViewController {
                     self?.currentTime = 0
                     self?.changeStatusTo(active: false)
                     self?.tracking = .none
-                } else {  // Keep going
+                } else {  // Keep going cool :)
                     self?.progressBar.setProgress(value: progress, animationDuration: 0.5)
                 }
             }

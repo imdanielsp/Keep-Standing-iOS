@@ -8,7 +8,7 @@
 
 import HealthKit
 
-typealias HealthManagerHandler = (_ success: Bool, _ error: Error?) ->Void
+typealias HealthManagerHandler = (_ success: Bool, _ error: Error?) -> Void
 typealias HealthManagerSampleHandler = (_ sample: HKSample?, _ error: Error?) -> Void
 
 
@@ -121,6 +121,22 @@ final class HealthManager {
             }
         }
         self.healthStore.execute(query)
+    }
+    
+    // 
+    // Report calories to HealthKit
+    //
+    func report(calories: Double, date: Date, completion: @escaping HealthManagerHandler) {
+        let caloriesType = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!
+        
+        let caloriesQuantity = HKQuantity(unit: HKUnit.calorie(), doubleValue: calories)
+        
+        let caloriesSample = HKQuantitySample(type: caloriesType, quantity: caloriesQuantity,
+                                              start: date, end: date)
+        
+        self.healthStore.save(caloriesSample) { success, error in
+            completion(success, error)
+        }
     }
     
     //
