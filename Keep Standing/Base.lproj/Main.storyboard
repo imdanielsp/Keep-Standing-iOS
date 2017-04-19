@@ -301,15 +301,19 @@
                     </view>
                     <connections>
                         <outlet property="weightPicker" destination="qpp-gP-T8y" id="DHH-LQ-epx"/>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="toMainVC" id="ZjK-PE-T07"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="toMainVC" animates="NO" id="ZjK-PE-T07"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="toMainVCAnimated" id="m9I-4Z-SDH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G1S-Hb-qWg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-620" y="123"/>
+            <point key="canvasLocation" x="-620.28985507246387" y="122.28260869565219"/>
         </scene>
     </scenes>
     <resources>
         <image name="settings" width="128" height="128"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="m9I-4Z-SDH"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -9,6 +9,6 @@
 import Foundation
 
 struct User {
-    var weight: Double?
-    var height: Double?
+    var weight: Double
+    var height: Double
 }

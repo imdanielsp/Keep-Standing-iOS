@@ -22,11 +22,8 @@ final class HealthManager {
     //
     private static var healthManager: HealthManager?
     
-    static func getInstance(completion: HealthManagerHandler? = nil) -> HealthManager {
+    static func getInstance() -> HealthManager {
         if self.healthManager == nil {
-            if let completion = completion {
-                self.healthManager = HealthManager(completion: completion)
-            }
             self.healthManager = HealthManager()
         }
         return self.healthManager!  // For sure, healthManager no optional
@@ -59,21 +56,15 @@ final class HealthManager {
         }
     }
     
-    //
-    // Private inits
-    //
-    private init() {
-        self.authorizeHealthKit()
-    }
-    
-    private init(completion: @escaping HealthManagerHandler) {
-        self.authorizeHealthKit(completion: completion)
-    }
-    
     // 
     // Authorization
     //
-    private func authorizeHealthKit(completion: HealthManagerHandler? = nil) {
+    
+    var weightAuthStatus: HKAuthorizationStatus {
+        return self.healthStore.authorizationStatus(for: HKObjectType.quantityType(forIdentifier: .bodyMass)!)
+    }
+    
+    func authorizeHealthKit(completion: HealthManagerHandler? = nil) {
         let healthDataToRead = Set(arrayLiteral: HKObjectType.quantityType(forIdentifier: .height)!,
             HKObjectType.quantityType(forIdentifier: .bodyMass)!)
         
