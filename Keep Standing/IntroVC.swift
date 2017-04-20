@@ -75,8 +75,9 @@ class IntroVC: UIViewController {
                     
                     if let result = result {
                         // Got data from HealthKit, good
-                        let weight = (result as? HKQuantitySample)?.quantity.doubleValue(for: HKUnit.pound())
-                        self?.userDataManager.weight = weight
+                        if let weight = (result as? HKQuantitySample)?.quantity.doubleValue(for: HKUnit.pound()) {
+                            self?.userDataManager.weight = weight
+                        }
                         DispatchQueue.main.async {
                             self?.performSegue(withIdentifier: "toMainVCAnimated", sender: nil)
                         }

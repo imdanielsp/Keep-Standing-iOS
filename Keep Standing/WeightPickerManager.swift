@@ -46,7 +46,7 @@ class WeightPickerManager: NSObject, UIPickerViewDataSource, UIPickerViewDelegat
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.userDataManager.weight = Double(self.weights[row])
+        self.userDataManager.weight = Double(self.weights[row]) ?? 0
     }
 
 }

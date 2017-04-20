@@ -13,8 +13,8 @@ import HealthKit
 
 
 class MainVC: UIViewController {
-    static var secondInHour = Double(5) // Change to 60 * 60
-    
+//    static var secondInHour: Double = 60.0 * 60.0
+    static var secondInHour: Double = 5.0
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var burnedCaloriesLabel: UILabel!
     @IBOutlet weak var standingTimeLabel: UILabel!
@@ -29,7 +29,11 @@ class MainVC: UIViewController {
     // Timer and current data
     var timer: Timer = Timer()
     var currentTime = 0
-    var currentBurnedCalories = 0.0
+    var currentBurnedCalories = 0.0 {
+        willSet {
+            self.burnedCaloriesLabel.text = String(format: "%0.1f", newValue)
+        }
+    }
     var currentStandingTime = 0.0 {
         didSet {
             self.standingTimeLabel.text = String(format: "%0.1f", self.currentStandingTime)
@@ -41,6 +45,13 @@ class MainVC: UIViewController {
         }
     }
  
+    var currentProgress: (value: CGFloat, interval: Double) = (0.0 , 0.0) {
+        willSet {
+            self.progressBar.setProgress(value: newValue.value,
+                                         animationDuration: newValue.interval)
+        }
+    }
+    
     // MARK: - Health Manager
     let healthManager = HealthManager.getInstance()
     
@@ -48,11 +59,34 @@ class MainVC: UIViewController {
     // MARK: - UserData Manager
     let userDataManager = UserDataManager()
     
+    // MARK: - Deinit
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     // MARK: ViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initViews()
-    }   
+        
+        // Try to restore data if possible when first enter the app
+        self.restoreData()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.restoreData),
+                                               name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.saveCurrentData),
+                                               name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.saveCurrentData),
+                                               name: NSNotification.Name.UIApplicationWillTerminate, object: nil)
+    }
+    
+    func restoreData() {
+        if let restorePackage = self.userDataManager.buildRestorePacakge() {
+            self.currentBurnedCalories = restorePackage.calories
+            self.currentStandingTime = restorePackage.standingTime
+            self.currentSittingTime = restorePackage.sittingTime
+        }
+    }
     
     // MARK: - Helper Methods
     func initViews() {
@@ -79,32 +113,49 @@ class MainVC: UIViewController {
         }
     }
     
-    func updateBurnedCaloriesIn(form: FormType) {
-        if let weight = self.userDataManager.weight {
-            switch form {
-            case .sitting:
-                self.currentBurnedCalories += weight * (1.0/MainVC.secondInHour) * form.rawValue
-            case .standing:
-                self.currentBurnedCalories += weight * (1.0/MainVC.secondInHour) * form.rawValue
-            }
-            
-            self.burnedCaloriesLabel.text = String(format: "%0.0f", self.currentBurnedCalories)
-            
-            self.userDataManager.save(calories: self.currentBurnedCalories) { [weak self] calories, date in
-                self?.healthManager.report(calories: calories, date: Date()) { [weak self] success, error in
-                    if error != nil {
-                        let message = "Couldn't save data to Health Kit"
-                        let alertController = UIAlertController(title: "Error", message: message,
-                                                               preferredStyle: .alert)
-                        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-                        alertController.addAction(action)
-                        
-                        DispatchQueue.main.async {
-                            self?.present(alertController, animated: true)
-                        }
+    func saveCurrentData() {
+        self.userDataManager.save(calories: self.currentBurnedCalories,
+                                  standingTime: self.currentStandingTime,
+                                  sittingTime: self.currentSittingTime) { [weak self] calories, date in
+                                    
+            self?.healthManager.report(calories: calories, date: Date()) { success, error in
+                if error != nil {
+                    let message = "Couldn't save data to Health Kit"
+                    let alertController = UIAlertController(title: "Error", message: message,
+                                                            preferredStyle: .alert)
+                    let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(action)
+                    
+                    DispatchQueue.main.async {
+                        self?.present(alertController, animated: true)
                     }
                 }
             }
+        }
+    }
+    
+    func calculateBurnedCalories(with weight: Double, met factor: Double) -> Double {
+        return (weight * (1.0/MainVC.secondInHour) * factor) / 100
+    }
+    
+    func updateBurnedCaloriesIn(form: FormType) {
+        let weight = self.userDataManager.weight
+        if weight != 0 {
+            let burnedCalories = self.calculateBurnedCalories(with: weight, met: form.rawValue)
+            switch form {
+            case .sitting:
+                self.currentBurnedCalories += burnedCalories
+            case .standing:
+                self.currentBurnedCalories += burnedCalories
+            }
+            
+            // Save and report
+            self.saveCurrentData()
+        } else {
+            self.timer.invalidate()
+            self.currentTime = 0
+            // TODO: - Show error that can't calculate calories
+            print("Weight is zero or no set!")
         }
     }
     
@@ -156,13 +207,13 @@ class MainVC: UIViewController {
                 self?.updateBurnedCaloriesIn(form: .sitting)
                     
                 if progress >= 100.0 { // Done, stop the timer
-                    self?.progressBar.setProgress(value: 0.0, animationDuration: 1.0)
+                    self?.currentProgress = (value: 0.0, interval: 1.0)
                     timer.invalidate()
                     self?.currentTime = 0
                     self?.changeStatusTo(active: false)
                     self?.tracking = .none
                 } else {  // Keep going
-                    self?.progressBar.setProgress(value: progress, animationDuration: 0.5)
+                    self?.currentProgress = (value: progress, interval: 0.5)
                 }
             }
             
@@ -197,13 +248,13 @@ class MainVC: UIViewController {
                 self?.updateBurnedCaloriesIn(form: .standing)
                 
                 if progress >= 100.0 { // Done, stop the timer
-                    self?.progressBar.setProgress(value: 0.0, animationDuration: 1.0)
+                    self?.currentProgress = (value: 0.0, interval: 1.0)
                     timer.invalidate()
                     self?.currentTime = 0
                     self?.changeStatusTo(active: false)
                     self?.tracking = .none
                 } else {  // Keep going cool :)
-                    self?.progressBar.setProgress(value: progress, animationDuration: 0.5)
+                    self?.currentProgress = (value: progress, interval: 0.5)
                 }
             }
             

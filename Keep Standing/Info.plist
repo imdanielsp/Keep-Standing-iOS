@@ -20,6 +20,12 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Allow Keep Standing read your height and weight to calcutale the burned calories.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Allow Keep Standing to write to your Health Kit.</string>
+	<key>UIBackgroundModes</key>
+	<array/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -35,10 +41,6 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>Allow Keep Standing to write to your Health Kit.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Allow Keep Standing read your height and weight to calcutale the burned calories.</string>
 	<key>View controller-based status bar appearance equal</key>
 	<string>NO</string>
 </dict>

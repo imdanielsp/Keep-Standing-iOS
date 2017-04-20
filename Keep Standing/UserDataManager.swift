@@ -25,9 +25,18 @@ enum DataMangerKey: String {
     case height = "HeightKey"
     case lastSaved = "LastSaved"
     case calories = "CaloriesKey"
+    case standingTime = "StandingTimeKey"
+    case sittingTime = "SittingTimeKey"
 }
 
 typealias UserDataManagerHanlder = (_ calories: Double, _ date: Date) -> Void
+
+struct RestorePackage {
+    let calories: Double
+    let standingTime: Double
+    let sittingTime: Double
+    let lastSaved: Date?
+}
 
 class UserDataManager {
     let userDefaults: UserDefaults
@@ -38,31 +47,66 @@ class UserDataManager {
     let lastSavedKey: String = "LastSaved"
     
     // Data+Observers+Setter+Getters
-    private var userHeight: Double? {
-        willSet {
-            self.userDefaults.set(newValue, forKey: DataMangerKey.height.rawValue)
-        }
-    }
+    private var userHeight: Double?
     
-    var height: Double? {
+    var height: Double {
         get {
             return self.userDefaults.double(forKey: DataMangerKey.height.rawValue)
         } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.height.rawValue)
             self.userHeight = newValue
         }
     }
     
-    private var userWeight: Double? {
-        willSet {
-            self.userDefaults.set(newValue, forKey: DataMangerKey.weight.rawValue)
-        }
-    }
+    private var userWeight: Double?
     
-    var weight: Double? {
+    var weight: Double {
         get {
             return self.userDefaults.double(forKey: DataMangerKey.weight.rawValue)
         } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.weight.rawValue)
             self.userWeight = newValue
+        }
+    }
+    
+    private var userStandingTime: Double?
+    
+    var standingTime: Double {
+        get {
+            return self.userDefaults.double(forKey: DataMangerKey.standingTime.rawValue)
+        } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.standingTime.rawValue)
+            self.userStandingTime = newValue
+        }
+    }
+    
+    private var userSittingTime: Double?
+    
+    var sittingTime: Double {
+        get {
+            return self.userDefaults.double(forKey: DataMangerKey.sittingTime.rawValue)
+        } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.sittingTime.rawValue)
+            self.userSittingTime = newValue
+        }
+    }
+    
+    private var userCalories: Double?
+    
+    var calories: Double {
+        get {
+            return self.userDefaults.double(forKey: DataMangerKey.calories.rawValue)
+        } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.calories.rawValue)
+            self.userCalories = newValue
+        }
+    }
+    
+    private var lastSaved: Date? {
+        get {
+            return self.userDefaults.object(forKey: DataMangerKey.lastSaved.rawValue) as? Date
+        } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.lastSaved.rawValue)
         }
     }
     
@@ -81,19 +125,27 @@ class UserDataManager {
     }
     
     // Save Calories Burned
-    func save(calories: Double, completion: UserDataManagerHanlder? = nil) {
-        let lastSavedKey = DataMangerKey.lastSaved.rawValue
-        let caloriesKey = DataMangerKey.calories.rawValue
+    func save(calories: Double? = nil, standingTime: Double? = nil, sittingTime: Double? = nil,
+              completion: UserDataManagerHanlder? = nil) {
+        
+        self.save(timeStanding: standingTime, sitting: sittingTime)
+        
+        if let calories = calories {
+            self.save(calories: calories, completion: completion)
+        }
+    }
+    
+    private func save(calories: Double, completion: UserDataManagerHanlder? = nil) {
         let now = Date()
         
-        if let lastSaved = self.userDefaults.object(forKey: lastSavedKey) as? Date {
+        if let lastSaved = self.lastSaved {
             
             if lastSaved.isPastRelative(to: now) {
                 // Saved Yesterday, new calories!
-                self.userDefaults.set(calories, forKey: caloriesKey)
+                self.calories = calories
             } else {
                 // Saved Today
-                let oldCalories = self.userDefaults.double(forKey: caloriesKey)
+                let oldCalories = self.calories
                 let deltaCalories = calories - oldCalories
                 let newCalories = oldCalories + deltaCalories
                 
@@ -101,18 +153,40 @@ class UserDataManager {
                     completion(newCalories, now)
                 }
                 
-                self.userDefaults.set(newCalories, forKey: caloriesKey)
+                self.calories = newCalories
             }
             
         } else {
             // Never saved
-            self.userDefaults.set(calories, forKey: caloriesKey)
+            self.calories = calories
         }
         
-        self.userDefaults.set(now, forKey: DataMangerKey.lastSaved.rawValue)
+        self.lastSaved = now
         
         if let completion = completion {
             completion(calories, now)
         }
+    }
+    
+    private func save(timeStanding: Double?, sitting: Double?) {
+        if let standingTime = timeStanding {
+            self.standingTime = standingTime
+        }
+        
+        if let sittingTime = sitting {
+            self.sittingTime = sittingTime
+        }
+    }
+    
+    // Restore
+    func buildRestorePacakge() -> RestorePackage? {
+        guard let lastSaved = self.lastSaved, !lastSaved.isPastRelative(to: Date())  else {
+            return nil
+        }
+        
+        return RestorePackage(calories: self.calories,
+                              standingTime: self.standingTime,
+                              sittingTime: self.sittingTime,
+                              lastSaved: self.lastSaved)
     }
 }
