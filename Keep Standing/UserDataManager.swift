@@ -20,40 +20,20 @@ extension Date {
     
 }
 
-enum DataMangerKey: String {
-    case weight = "WeightKey"
-    case height = "HeightKey"
-    case lastSaved = "LastSaved"
-    case calories = "CaloriesKey"
-    case standingTime = "StandingTimeKey"
-    case sittingTime = "SittingTimeKey"
-}
-
+// UserDataManager type alias for function handler
 typealias UserDataManagerHanlder = (_ calories: Double, _ date: Date) -> Void
-
-struct RestorePackage {
-    let calories: Double
-    let standingTime: Double
-    let sittingTime: Double
-    let lastSaved: Date?
-}
 
 class UserDataManager {
     let userDefaults: UserDefaults
-    
-    // Object key
-    let weightKey: String = "WeightKey"
-    let heightKey: String = "HeightKey"
-    let lastSavedKey: String = "LastSaved"
-    
+
     // Data+Observers+Setter+Getters
     private var userHeight: Double?
     
     var height: Double {
         get {
-            return self.userDefaults.double(forKey: DataMangerKey.height.rawValue)
+            return self.userDefaults.double(forKey: DataMangerKey.height.key)
         } set {
-            self.userDefaults.set(newValue, forKey: DataMangerKey.height.rawValue)
+            self.userDefaults.set(newValue, forKey: DataMangerKey.height.key)
             self.userHeight = newValue
         }
     }
@@ -110,6 +90,40 @@ class UserDataManager {
         }
     }
     
+    private var timerCurrentTime: Int?
+    
+    var currentTime: Int {
+        get {
+            return self.userDefaults.integer(forKey: DataMangerKey.currentTime.key)
+        } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.currentTime.key)
+            self.timerCurrentTime = newValue
+        }
+    }
+    
+    private var timerCurrentProgress: Double?
+    
+    var currentProgress: Double {
+        get {
+            return self.userDefaults.double(forKey: DataMangerKey.currentProgress.key)
+        } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.currentProgress.key)
+            self.timerCurrentProgress = newValue
+        }
+    }
+    
+    private var backgroundLastTimeStamp: Date?
+    
+    var backgroundTimeStamp: Date {
+        get {
+            return self.userDefaults.object(forKey:
+                DataMangerKey.backgroundStateTimeStap.key) as! Date
+        } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.backgroundStateTimeStap.key)
+            self.backgroundLastTimeStamp = newValue
+        }
+    }
+    
     // Init
     init() {
         self.userDefaults = UserDefaults()
@@ -122,6 +136,10 @@ class UserDataManager {
     
     var isHeightSet: Bool {
         return self.userDefaults.object(forKey: DataMangerKey.height.rawValue) != nil
+    }
+    
+    var isTimeStampValid: Bool {
+        return self.
     }
     
     // Save Calories Burned

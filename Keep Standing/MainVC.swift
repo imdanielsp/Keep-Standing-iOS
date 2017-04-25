@@ -28,8 +28,14 @@ class MainVC: UIViewController {
     
     // Timer and current data
     var timer: Timer = Timer()
-    var currentTime = 0
-    var currentBurnedCalories = 0.0 {
+    
+    var currentTime: Int = 0 {
+        willSet {
+            self.userDataManager.currentTime = newValue
+        }
+    }
+    
+    var currentBurnedCalories: Double = 0.0 {
         willSet {
             self.burnedCaloriesLabel.text = String(format: "%0.1f", newValue)
         }
@@ -51,7 +57,7 @@ class MainVC: UIViewController {
                                          animationDuration: newValue.interval)
         }
     }
-    
+
     // MARK: - Health Manager
     let healthManager = HealthManager.getInstance()
     
@@ -159,6 +165,13 @@ class MainVC: UIViewController {
         }
     }
     
+    func updateProgressBar(with value: CGFloat, interval: Double) {
+        self.currentProgress = (value, interval)
+        
+        // Store the value
+        self.userDataManager.currentProgress = Double(value)
+    }
+    
     func displayValueGetterModal(title: String?, message: String?, actionTitle: String? = "OK",
                                    textFieldPlaceholder: String?,
                                    completion: @escaping (Double) -> Void) {
@@ -207,13 +220,13 @@ class MainVC: UIViewController {
                 self?.updateBurnedCaloriesIn(form: .sitting)
                     
                 if progress >= 100.0 { // Done, stop the timer
-                    self?.currentProgress = (value: 0.0, interval: 1.0)
+                    self?.updateProgressBar(with: 0.0, interval: 1.0)
                     timer.invalidate()
                     self?.currentTime = 0
                     self?.changeStatusTo(active: false)
                     self?.tracking = .none
                 } else {  // Keep going
-                    self?.currentProgress = (value: progress, interval: 0.5)
+                    self?.updateProgressBar(with: progress, interval: 0.5)
                 }
             }
             
@@ -248,13 +261,13 @@ class MainVC: UIViewController {
                 self?.updateBurnedCaloriesIn(form: .standing)
                 
                 if progress >= 100.0 { // Done, stop the timer
-                    self?.currentProgress = (value: 0.0, interval: 1.0)
+                    self?.updateProgressBar(with: 0.0, interval: 1.0)
                     timer.invalidate()
                     self?.currentTime = 0
                     self?.changeStatusTo(active: false)
                     self?.tracking = .none
                 } else {  // Keep going cool :)
-                    self?.currentProgress = (value: progress, interval: 0.5)
+                    self?.updateProgressBar(with: progress, interval: 0.5)
                 }
             }
             

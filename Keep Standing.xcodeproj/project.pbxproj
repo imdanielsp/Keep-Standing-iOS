@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E07C97B1EAED5B80041FE7D /* RestorePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E07C97A1EAED5B80041FE7D /* RestorePacket.swift */; };
+		6E07C97D1EAED5DD0041FE7D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E07C97C1EAED5DD0041FE7D /* Constants.swift */; };
 		6E1B3A0E1EA6BEF70089E1BF /* RoundedButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1B3A0D1EA6BEF70089E1BF /* RoundedButtonView.swift */; };
 		6E365D791EA6940D0076D798 /* IntroVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E365D781EA6940D0076D798 /* IntroVC.swift */; };
 		6E365D7B1EA694EF0076D798 /* WeightPickerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E365D7A1EA694EF0076D798 /* WeightPickerManager.swift */; };
 		6E54F69A1EA5B0E300CA6F33 /* UserDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E54F6991EA5B0E300CA6F33 /* UserDataManager.swift */; };
 		6E54F69C1EA5B9AB00CA6F33 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E54F69B1EA5B9AB00CA6F33 /* User.swift */; };
 		6E54F69E1EA5C25C00CA6F33 /* DataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E54F69D1EA5C25C00CA6F33 /* DataError.swift */; };
+		6EF241E51EA9C01200720EE7 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF241E41EA9C01200720EE7 /* SettingsVC.swift */; };
 		6EF33AD11EA4847000A82780 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF33AD01EA4847000A82780 /* HealthManager.swift */; };
 		6EF33AD31EA4848500A82780 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF33AD21EA4848500A82780 /* HealthKit.framework */; };
 		6EF33AD61EA486EB00A82780 /* WatchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF33AD51EA486EB00A82780 /* WatchKit.framework */; };
@@ -26,12 +29,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E07C97A1EAED5B80041FE7D /* RestorePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestorePacket.swift; sourceTree = "<group>"; };
+		6E07C97C1EAED5DD0041FE7D /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6E1B3A0D1EA6BEF70089E1BF /* RoundedButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButtonView.swift; sourceTree = "<group>"; };
 		6E365D781EA6940D0076D798 /* IntroVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroVC.swift; sourceTree = "<group>"; };
 		6E365D7A1EA694EF0076D798 /* WeightPickerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeightPickerManager.swift; sourceTree = "<group>"; };
 		6E54F6991EA5B0E300CA6F33 /* UserDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDataManager.swift; sourceTree = "<group>"; };
 		6E54F69B1EA5B9AB00CA6F33 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6E54F69D1EA5C25C00CA6F33 /* DataError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataError.swift; sourceTree = "<group>"; };
+		6EF241E41EA9C01200720EE7 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		6EF33AD01EA4847000A82780 /* HealthManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
 		6EF33AD21EA4848500A82780 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		6EF33AD41EA4848500A82780 /* Keep Standing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Keep Standing.entitlements"; sourceTree = "<group>"; };
@@ -85,6 +91,7 @@
 			children = (
 				6EF9F4F21E98AB5000592572 /* MainVC.swift */,
 				6E365D781EA6940D0076D798 /* IntroVC.swift */,
+				6EF241E41EA9C01200720EE7 /* SettingsVC.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -93,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				6E54F69B1EA5B9AB00CA6F33 /* User.swift */,
+				6E07C97A1EAED5B80041FE7D /* RestorePacket.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -105,6 +113,7 @@
 				6E54F6991EA5B0E300CA6F33 /* UserDataManager.swift */,
 				6E54F69D1EA5C25C00CA6F33 /* DataError.swift */,
 				6E365D7A1EA694EF0076D798 /* WeightPickerManager.swift */,
+				6E07C97C1EAED5DD0041FE7D /* Constants.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -287,11 +296,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EF241E51EA9C01200720EE7 /* SettingsVC.swift in Sources */,
 				6EF33AD11EA4847000A82780 /* HealthManager.swift in Sources */,
 				6EF33AD81EA487B700A82780 /* Type.swift in Sources */,
 				6E54F69C1EA5B9AB00CA6F33 /* User.swift in Sources */,
 				6EF9F4F31E98AB5000592572 /* MainVC.swift in Sources */,
 				6E54F69E1EA5C25C00CA6F33 /* DataError.swift in Sources */,
+				6E07C97B1EAED5B80041FE7D /* RestorePacket.swift in Sources */,
+				6E07C97D1EAED5DD0041FE7D /* Constants.swift in Sources */,
 				6E365D791EA6940D0076D798 /* IntroVC.swift in Sources */,
 				6E54F69A1EA5B0E300CA6F33 /* UserDataManager.swift in Sources */,
 				6EF9F4F11E98AB5000592572 /* AppDelegate.swift in Sources */,
