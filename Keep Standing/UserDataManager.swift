@@ -14,10 +14,18 @@ extension Date {
         return componets.day ?? 0
     }
     
+    func hoursBetween(date: Date) -> Int {
+        let componets = Calendar.current.dateComponents([.hour], from: self, to: date)
+        return componets.hour ?? 0
+    }
+    
     func isPastRelative(to date: Date) -> Bool {
         return self.daysBetween(date: date) > 0
     }
     
+    func isValidRelative(to date: Date, hours: Int = 2) -> Bool {
+        return self.hoursBetween(date: date) > hours
+    }
 }
 
 // UserDataManager type alias for function handler
@@ -139,7 +147,8 @@ class UserDataManager {
     }
     
     var isTimeStampValid: Bool {
-        return self.
+        return (self.backgroundLastTimeStamp != nil)
+            && self.backgroundLastTimeStamp!.isValidRelative(to: Date())
     }
     
     // Save Calories Burned
