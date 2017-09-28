@@ -24,7 +24,11 @@ class MainVC: UIViewController {
     @IBOutlet weak var progressBar: UICircularProgressRingView!
     
     // State
-    var tracking: StateType = .none
+    var tracking: StateType = .none {
+        willSet {
+            self.userDataManager.currentState = newValue.form
+        }
+    }
     
     // Timer and current data
     var timer: Timer = Timer()
@@ -91,6 +95,20 @@ class MainVC: UIViewController {
             self.currentBurnedCalories = restorePackage.calories
             self.currentStandingTime = restorePackage.standingTime
             self.currentSittingTime = restorePackage.sittingTime
+            
+            if restorePackage.isTimeStampValid { // We were running, lets catch up
+                let lastCurrentTime = restorePackage.currentTime
+                let lastProgress = restorePackage.currentProgress
+                let lastTimeStamp = restorePackage.lastTimeStamp
+                
+                self.currentTime = lastCurrentTime + Int(lastTimeStamp.timeIntervalSinceNow)
+                self.updateBurnedCaloriesIn(form: restorePackage.lastState)
+                
+                let newProgressBarValue = 100.0 * (Double(self.currentTime) / MainVC.secondInHour)
+                let currentProgressBarValue = newProgressBarValue + lastProgress
+                self.updateProgressBar(with: CGFloat(currentProgressBarValue), interval: 0.5)
+                
+            }
         }
     }
     
@@ -153,6 +171,8 @@ class MainVC: UIViewController {
                 self.currentBurnedCalories += burnedCalories
             case .standing:
                 self.currentBurnedCalories += burnedCalories
+            case .none:
+                break
             }
             
             // Save and report

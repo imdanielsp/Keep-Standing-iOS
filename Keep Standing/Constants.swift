@@ -20,6 +20,7 @@ enum DataMangerKey: String {
     case currentTime = "CURRENT_TIME"
     case currentProgress = "CURRENT_PROGRESS"
     case backgroundStateTimeStap = "BACKGROUND_STATE_TIME_STAMP"
+    case currentState = "CURRENT_STATE"
     
     var key: String {
         return self.rawValue

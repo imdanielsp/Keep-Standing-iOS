@@ -13,4 +13,11 @@ struct RestorePackage {
     let standingTime: Double
     let sittingTime: Double
     let lastSaved: Date?
+    
+    // Used for restoring
+    let isTimeStampValid: Bool
+    let lastTimeStamp: Date
+    let lastState: FormType
+    let currentTime: Int
+    let currentProgress: Double
 }

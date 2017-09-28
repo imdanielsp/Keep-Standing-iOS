@@ -132,6 +132,17 @@ class UserDataManager {
         }
     }
     
+    private var timerCurrentState: FormType?
+    
+    var currentState: FormType {
+        get {
+            return self.userDefaults.object(forKey: DataMangerKey.currentState.key) as! FormType
+        } set {
+            self.userDefaults.set(newValue, forKey: DataMangerKey.currentState.key)
+            self.timerCurrentState = newValue
+        }
+    }
+    
     // Init
     init() {
         self.userDefaults = UserDefaults()
@@ -214,6 +225,11 @@ class UserDataManager {
         return RestorePackage(calories: self.calories,
                               standingTime: self.standingTime,
                               sittingTime: self.sittingTime,
-                              lastSaved: self.lastSaved)
+                              lastSaved: self.lastSaved,
+                              isTimeStampValid: self.isTimeStampValid,
+                              lastTimeStamp: self.backgroundTimeStamp,
+                              lastState: self.currentState,
+                              currentTime: self.currentTime,
+                              currentProgress: self.currentProgress)
     }
 }
